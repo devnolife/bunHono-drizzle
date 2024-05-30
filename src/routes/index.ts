@@ -1,7 +1,7 @@
 import { Auth } from "../auth/auth";
 import { Hono } from "hono";
-import { decode , verify } from 'hono/jwt'
-
+import { decode, verify } from "hono/jwt";
+import { bearerAuth } from 'hono/bearer-auth'
 const routes = new Hono();
 const auth = new Auth();
 
@@ -11,7 +11,7 @@ routes.post("/login", async (c) => {
 });
 
 routes.get("/me", async (c) => {
-  
+  const token = c.req.header('Authorization : Bearer');
 });
 // // Decode the JWT token
 // const tokenToDecode =
@@ -29,8 +29,6 @@ routes.get("/me", async (c) => {
 routes.onError(async (c: any) => {
   return c.json({ status: 400, message: c.error.message });
 });
-
-
 
 routes.get("/test-api", async (c) => {
   return c.text("Hello, World!");
