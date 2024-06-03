@@ -1,5 +1,3 @@
 node_module
 .env
-
-
-
+src/drizzle/migrations/
