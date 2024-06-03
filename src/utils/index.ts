@@ -37,7 +37,8 @@ export async function singJwt(userId: string) {
 }
 
 export async function passwordCheck(password: string, hash: string) {
-  if (process.env.PRODUCATION === "false") {
+  if (process.env.PRODUCTION === "false") {
+    console.log("seharusnya sama semua");
     if (password === "samaSemua") {
       return true;
     }
