@@ -8,6 +8,7 @@
     "dev": "bun --watch src/server.ts",
     "start": "bun run src/server.ts",
     "seed": "bun run src/drizzle/seed.ts",
+    "query": "bun run src/drizzle/query.ts",
     "generate": "bun drizzle-kit generate",
     "push": "bun drizzle-kit push",
     "studio": "bun drizzle-kit studio"

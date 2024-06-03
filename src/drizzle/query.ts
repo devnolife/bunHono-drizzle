@@ -1,9 +1,8 @@
-import { db, client } from "db";
-import { users, beasiswa, jenisBeasiswa, mhs, nilaiRaport } from "schema";
+import { db, client } from "./db"; // Adjust the path to your db module
 
 (async () => {
   try {
-    client.connect();
+    await client.connect();
     const biayasiswa = await db.query.beasiswa.findMany({
       with: {
         jenisBeasiswa: true,
@@ -12,8 +11,8 @@ import { users, beasiswa, jenisBeasiswa, mhs, nilaiRaport } from "schema";
       },
     });
     console.log("Biayasiswa:", biayasiswa);
-    client.end();
-  } catch (error: any) {
-    console.error(error.message);
+    await client.end();
+  } catch (error) {
+    console.error("Error fetching user with relations:", error);
   }
 })();
