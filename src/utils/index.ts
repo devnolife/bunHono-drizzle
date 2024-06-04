@@ -34,7 +34,6 @@ export async function findUniqueUsers(username: string, namaTable: any) {
     });
     return user ? user : null;
   } catch (error: any) {
-    console.log("🚀 ~ findUniqueUsers ~ error:", error);
     return error;
   }
 }

@@ -8,7 +8,16 @@ export class AdminService {
     try {
       const students = await db.query.mhs.findMany({
         with: {
-          beasiswa: true,
+          beasiswa: {
+            with: {
+              jenisBeasiswa: {
+                columns: {
+                  nama: true,
+                },
+              },
+              nilaiRaport: true,
+            },
+          },
         },
       });
       return {
