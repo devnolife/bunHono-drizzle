@@ -37,7 +37,7 @@ This is a server-side application for managing scholarship registrations. It pro
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/devnolife/honoPostDrizzle.git
+   git clone https://github.com/devnolife/bunHono-drizzle.git
    cd devnolife-pendaftaran-beasiswa
    ```
 
