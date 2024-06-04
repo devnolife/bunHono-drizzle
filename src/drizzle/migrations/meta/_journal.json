@@ -64,6 +64,34 @@
       "when": 1717385634340,
       "tag": "0008_polite_doctor_faustus",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1717447636023,
+      "tag": "0009_great_george_stacy",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1717529185797,
+      "tag": "0010_furry_scarlet_witch",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1717533139565,
+      "tag": "0011_plain_stark_industries",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1717535502165,
+      "tag": "0012_old_psylocke",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,6 @@
 import { verify } from "hono/jwt";
 import { Next, Context } from "hono";
-
-export class Auth {
+export class Middleware {
   async isAuth(c: Context, next: Next) {
     try {
       const token = c.req.header("Authorization");
@@ -13,7 +12,7 @@ export class Auth {
       if (!payload) {
         return c.json({ status: 401, message: "Unauthorized" });
       }
-      c.set("playload", payload.sub);
+      c.set("jwtPayload", payload);
       await next();
     } catch (error: any) {
       return c.json({ status: 401, message: "Unauthorized" });

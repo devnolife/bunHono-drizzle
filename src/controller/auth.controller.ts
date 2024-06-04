@@ -1,10 +1,15 @@
-import { checkUsers } from "api";
-import { users } from "schema";
-import { check, singJwt, authenticateUser } from "utils";
+import { checkUsers, getProfile } from "api";
+import { mhs, users } from "schema";
+import {
+  findUniqueUsers,
+  singJwt,
+  authenticateUser,
+  insertData,
+} from "utils";
 export class Auth {
   async me(userId: string) {
     try {
-      const user = await check(userId, users);
+      const user = await findUniqueUsers(userId, users);
       return {
         status: 200,
         message: "Success",
@@ -22,7 +27,7 @@ export class Auth {
     try {
       let user, token, authResult;
       if (username === "admin") {
-        user = await check(username, users);
+        user = await findUniqueUsers(username, users);
         if (!user) {
           return {
             status: 404,
@@ -47,6 +52,17 @@ export class Auth {
         user = await checkUsers(username);
         authResult = await authenticateUser(password, user.passwd);
         if (authResult) return authResult;
+        const profile = await getProfile(user.nim);
+        insertData(mhs, {
+          nim: user.nim,
+          nama: profile.nama,
+          prodi: profile.prodi,
+          tempatLahir: profile.tempatLahir,
+          tanggalLahir: new Date(profile.tanggalLahir),
+          jenisKelamin: profile.jenisKelamin,
+          hp: profile.hp,
+          kodeProdi: profile.kodeProdi,
+        });
         token = await singJwt(user.nim);
         return {
           status: 200,
