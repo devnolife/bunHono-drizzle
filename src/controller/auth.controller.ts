@@ -1,5 +1,5 @@
-import { checkUsers, getProfile } from "api";
-import { mhs, users } from "schema";
+import { checkUsers, getProfile, getNilaiRaport } from "api";
+import { mhs, users, nilaiRaport as nilaiRaportTable } from "schema";
 import { findUniqueUsers, singJwt, authenticateUser, insertData } from "utils";
 export class Auth {
   async me(userId: string) {
@@ -20,7 +20,15 @@ export class Auth {
   }
   async login(username: string, password: string) {
     try {
-      let user, token, authResult;
+      let user: {
+          password: string;
+          id: string;
+          username: any;
+          passwd: string;
+          nim: string;
+        },
+        token,
+        authResult;
       if (username === "admin") {
         user = await findUniqueUsers(username, users);
         if (!user) {
@@ -58,6 +66,25 @@ export class Auth {
           hp: profile.hp,
           kodeProdi: profile.kodeProdi,
         });
+        const nilaiRaport = await getNilaiRaport(user.nim);
+        nilaiRaport.forEach(
+          (nilai: {
+            mapel: any;
+            semester1: any;
+            semester2: any;
+            semester3: any;
+            semester4: any;
+          }) => {
+            insertData(nilaiRaportTable, {
+              mapel: nilai.mapel,
+              nim: user.nim,
+              semester1: nilai.semester1,
+              semester2: nilai.semester2,
+              semester3: nilai.semester3,
+              semester4: nilai.semester4,
+            });
+          }
+        );
         token = await singJwt(user.nim);
         return {
           status: 200,

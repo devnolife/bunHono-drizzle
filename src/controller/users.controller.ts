@@ -10,4 +10,9 @@ export class UserControllers {
     const { userId } = c.get("jwtPayload");
     return this.userService.getUserProfile(userId);
   }
+
+  async nilaiRaport(c: any) {
+    const { userId } = c.get("jwtPayload");
+    return this.userService.getNilaiRaport(userId);
+  }
 }

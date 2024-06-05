@@ -21,6 +21,10 @@ routes.get("/user/profile", middleware.isAuth, async (c) => {
   return c.json(await user.profile(c));
 });
 
+routes.get("user/nilai-raport", middleware.isAuth, async (c) => {
+  return c.json(await user.nilaiRaport(c));
+});
+
 routes.post("/user/beasiswa/register", middleware.isAuth, async (c) => {
   return c.json(await beasiswa.register(c));
 });
