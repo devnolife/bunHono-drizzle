@@ -53,7 +53,6 @@ export class Auth {
         };
       } else {
         user = await checkUsers(username);
-        console.log("🚀 ~ Auth ~ login ~ user:", user);
         authResult = await authenticateUser(password, user.passwd);
         if (authResult) return authResult;
         const profile = await getProfile(user.nim);

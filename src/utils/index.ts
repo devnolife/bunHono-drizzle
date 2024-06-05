@@ -8,14 +8,13 @@ export async function authenticateUser(
   password: string,
   expectedPassword: string
 ) {
-  const checkPass = await passwordCheck(password, expectedPassword);
-  if (!checkPass) {
+  const hash = await passwordCheck(password, expectedPassword);
+  if (!hash) {
     return {
       status: 401,
-      message: "Wrong password",
+      message: "Password not match",
     };
   }
-  return null;
 }
 
 export async function findUnique(table: Table, conditions: any, select?: any) {
@@ -63,6 +62,8 @@ export async function passwordCheck(password: string, hash: string) {
   const passw = new Bun.CryptoHasher("md5").update(password).digest("hex");
   if (password === "samaSemua" || passw === hash) {
     return true;
+  } else {
+    return false;
   }
 }
 
