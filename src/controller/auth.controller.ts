@@ -1,11 +1,6 @@
 import { checkUsers, getProfile } from "api";
 import { mhs, users } from "schema";
-import {
-  findUniqueUsers,
-  singJwt,
-  authenticateUser,
-  insertData,
-} from "utils";
+import { findUniqueUsers, singJwt, authenticateUser, insertData } from "utils";
 export class Auth {
   async me(userId: string) {
     try {
@@ -70,6 +65,7 @@ export class Auth {
           data: {
             id: user.nim,
             username: user.nim,
+            nama: profile.nama,
             role: "users",
             token,
           },
