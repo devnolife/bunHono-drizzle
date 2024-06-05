@@ -15,6 +15,7 @@ export async function checkUsers(username: string) {
       return data.data.mahasiswaUser;
     }
   } catch (error: any) {
+    console.log("🚀 ~ checkUsers ~ error:", error);
     throw new Error(error.message);
   }
 }
