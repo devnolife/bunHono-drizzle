@@ -2,7 +2,7 @@ const url = "https://sicekcok.if.unismuh.ac.id/graphql";
 const urlLocal = "http://10.10.2.54:3144/graphql";
 export async function checkUsers(username: string) {
   try {
-    const users = await fetch("https://sicekcok.if.unismuh.ac.id/graphql", {
+    const users = await fetch(`${url}`, {
       method: "POST",
       body: JSON.stringify({
         query: `query{ mahasiswaUser(nim: "${username}"){   nim,   nama,   prodi,   passwd }}`,
@@ -24,7 +24,7 @@ export async function checkUsers(username: string) {
 
 export async function getProfile(username: string) {
   try {
-    const profile = await fetch("https://sicekcok.if.unismuh.ac.id/graphql", {
+    const profile = await fetch(`${url}`, {
       method: "POST",
       body: JSON.stringify({
         query: `query{ mahasiswa(nim: "${username}") { nama, email , tempatLahir, nim, kodeProdi, jenisKelamin, tempatLahir, tanggalLahir, hp }}`,
@@ -45,7 +45,7 @@ export async function getProfile(username: string) {
 
 export async function getNilaiRaport(username: string) {
   try {
-    const nilai = await fetch("https://sicekcok.if.unismuh.ac.id/graphql", {
+    const nilai = await fetch(`${url}`, {
       method: "POST",
       body: JSON.stringify({
         query: `query{ mahasiswaNilaiRapor(nim: "${username}") { 
