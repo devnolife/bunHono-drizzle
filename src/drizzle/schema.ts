@@ -22,6 +22,7 @@ export const mhs = pgTable("mahasiswa", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   nim: varchar("nim", { length: 15 }).unique().notNull(),
   nama: varchar("nama", { length: 100 }),
+  email: varchar("email", { length: 50 }),
   prodi: varchar("prodi", { length: 20 }),
   created_at: timestamp("created_at", { mode: "string" }),
   updated_at: timestamp("updated_at", { mode: "string" }),
@@ -43,6 +44,7 @@ export const beasiswa = pgTable("beasiswa", {
 export const jenisBeasiswa = pgTable("jenis_beasiswa", {
   id: smallint("id").primaryKey().notNull(),
   nama: varchar("nama", { length: 50 }),
+  detailJenis: smallint("detail_jenis"),
 });
 
 export const nilaiRaport = pgTable("nilai_raport", {
