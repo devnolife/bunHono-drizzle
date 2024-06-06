@@ -25,8 +25,15 @@ routes.get("user/nilai-raport", middleware.isAuth, async (c) => {
   return c.json(await user.nilaiRaport(c));
 });
 
+routes.post("/user/update-nilai-raport", middleware.isAuth, async (c) => {
+  return c.json(await user.editRaport(c));
+});
+
 routes.post("/user/beasiswa/register", middleware.isAuth, async (c) => {
   return c.json(await beasiswa.register(c));
+});
+routes.post("/user/beasiswa/upload", middleware.isAuth, async (c) => {
+  return c.json(await beasiswa.upload(c));
 });
 
 routes.get("/admin/mahasiswa", middleware.isAuth, async (c) => {
@@ -35,5 +42,6 @@ routes.get("/admin/mahasiswa", middleware.isAuth, async (c) => {
 
 routes.put("/admin/beasiswa/nilai", middleware.isAuth, async (c) => {
   return c.json(await admin.updateBeasiswaNilai(c));
-}); 
+});
+
 export default routes;

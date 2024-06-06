@@ -15,4 +15,11 @@ export class UserControllers {
     const { userId } = c.get("jwtPayload");
     return this.userService.getNilaiRaport(userId);
   }
+
+  async editRaport(c: any) {
+    const { idRaport, ...data } = await c.req.json();
+    return this.userService.updateNilaiRaport(idRaport, data);
+  }
+
+  async 
 }

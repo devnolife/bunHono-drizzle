@@ -80,4 +80,31 @@ export class UserService {
       throw error;
     }
   }
+
+  async updateNilaiRaport(idRaport: string, data: any) {
+    try {
+      const nilai = await db.query.nilaiRaport.findFirst({
+        where: eq(nilaiRaport.id, idRaport),
+      });
+      if (!nilai) {
+        return {
+          status: 404,
+          message: "Nilai raport not found",
+        };
+      }
+      await db
+        .update(nilaiRaport)
+        .set({
+          ...data,
+        })
+        .where(eq(nilaiRaport.id, idRaport));
+
+      return {
+        status: 200,
+        message: "Success",
+      };
+    } catch (error: any) {
+      throw error;
+    }
+  }
 }

@@ -7,6 +7,7 @@ import {
   date,
   smallint,
   integer,
+  unique,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 export const users = pgTable("users", {
@@ -48,14 +49,26 @@ export const jenisBeasiswa = pgTable("jenis_beasiswa", {
   detailJenis: smallint("detail_jenis"),
 });
 
-export const nilaiRaport = pgTable("nilai_raport", {
+export const nilaiRaport = pgTable(
+  "nilai_raport",
+  {
+    id: uuid("id").defaultRandom().primaryKey().notNull(),
+    mapel: varchar("mapel", { length: 50 }).notNull(),
+    nim: varchar("nim", { length: 15 }).notNull(),
+    semester1: varchar("semester1", { length: 10 }),
+    semester2: varchar("semester2", { length: 10 }),
+    semester3: varchar("semester3", { length: 10 }),
+    semester4: varchar("semester4", { length: 10 }),
+  },
+  (t) => ({
+    unq: unique("raport_unq").on(t.nim, t.mapel),
+  })
+);
+
+export const fileUpload = pgTable("file_upload", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
-  mapel: varchar("mapel", { length: 50 }),
   nim: varchar("nim", { length: 15 }).notNull(),
-  semester1: varchar("semester1", { length: 10 }),
-  semester2: varchar("semester2", { length: 10 }),
-  semester3: varchar("semester3", { length: 10 }),
-  semester4: varchar("semester4", { length: 10 }),
+  fileName: text("url"),
 });
 
 export const beasiswaRelations = relations(beasiswa, ({ one, many }) => ({
