@@ -35,8 +35,5 @@ routes.get("/admin/mahasiswa", middleware.isAuth, async (c) => {
 
 routes.put("/admin/beasiswa/nilai", middleware.isAuth, async (c) => {
   return c.json(await admin.updateBeasiswaNilai(c));
-});
-routes.onError(async (c: any) => {
-  return c.json({ status: 400, message: c.error.message });
-});
+}); 
 export default routes;

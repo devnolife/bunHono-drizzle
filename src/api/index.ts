@@ -1,5 +1,5 @@
 const url = "https://sicekcok.if.unismuh.ac.id/graphql";
-const urlLocal = "http://10.10.2.54:3144/graphql";
+import { HTTPException } from "hono/http-exception";
 export async function checkUsers(username: string) {
   try {
     const users = await fetch(`${url}`, {
@@ -10,15 +10,18 @@ export async function checkUsers(username: string) {
       }),
       headers: { "Content-Type": "application/json" },
     });
-    const data = await users.json();
-    if (data.data.mahasiswaUser === null) {
-      throw new Error("Data tidak ditemukan");
+    const {
+      data: { mahasiswaUser },
+    } = await users.json();
+    if (mahasiswaUser === null) {
+      throw new HTTPException(400, {
+        message: "Mahasiswa tidak ditemukan",
+      });
     } else {
-      return data.data.mahasiswaUser;
+      return mahasiswaUser;
     }
   } catch (error: any) {
-    console.log("🚀 ~ checkUsers ~ error:", error);
-    throw new Error(error.message);
+    throw error;
   }
 }
 
@@ -27,19 +30,21 @@ export async function getProfile(username: string) {
     const profile = await fetch(`${url}`, {
       method: "POST",
       body: JSON.stringify({
-        query: `query{ mahasiswa(nim: "${username}") { nama, email , tempatLahir, nim, kodeProdi, jenisKelamin, tempatLahir, tanggalLahir, hp }}`,
+        query: `query{ mahasiswa(nim: "${username}") { nama, email , tempatLahir, nim, kodeProdi, jenisKelamin, tempatLahir, tanggalLahir, hp, prodi{namaProdi} }}`,
         variables: {},
       }),
       headers: { "Content-Type": "application/json" },
     });
     const data = await profile.json();
-    if (data.data.mahasiswaUser === null) {
-      throw new Error("Data tidak ditemukan");
+    if (data.data.mahasiswa === null) {
+      throw new HTTPException(400, {
+        message: "Data tidak ditemukan !",
+      });
     } else {
       return data.data.mahasiswa;
     }
   } catch (error: any) {
-    throw new Error(error.message);
+    throw new error();
   }
 }
 
@@ -62,11 +67,13 @@ export async function getNilaiRaport(username: string) {
       data: { mahasiswaNilaiRapor },
     } = await nilai.json();
     if (mahasiswaNilaiRapor === null) {
-      throw new Error("Data tidak ditemukan");
+      throw new HTTPException(400, {
+        message: "Data tidak ditemukan !",
+      });
     } else {
       return mahasiswaNilaiRapor;
     }
   } catch (error: any) {
-    throw new Error(error?.message);
+    throw error;
   }
 }

@@ -15,7 +15,7 @@ export class Auth {
         },
       };
     } catch (error: any) {
-      throw new Error(error.message);
+      throw error;
     }
   }
   async login(username: string, password: string) {
@@ -59,12 +59,13 @@ export class Auth {
         insertData(mhs, {
           nim: user.nim,
           nama: profile.nama,
-          prodi: profile.prodi,
+          prodi: profile.prodi?.namaProdi,
           tempatLahir: profile.tempatLahir,
           tanggalLahir: new Date(profile.tanggalLahir),
           jenisKelamin: profile.jenisKelamin,
           hp: profile.hp,
           kodeProdi: profile.kodeProdi,
+          email: profile.email,
         });
         const nilaiRaport = await getNilaiRaport(user.nim);
         nilaiRaport.forEach(
@@ -99,8 +100,7 @@ export class Auth {
         };
       }
     } catch (error: any) {
-      console.log("🚀 ~ Auth ~ login ~ error:", error);
-      throw new Error(error.message);
+      throw error;
     }
   }
 }

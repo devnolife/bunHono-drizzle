@@ -37,6 +37,7 @@ export const beasiswa = pgTable("beasiswa", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   nim: varchar("nim", { length: 15 }).unique().notNull(),
   jenisBeasiswaId: smallint("jenis_biasiswa_id").notNull(),
+  detailJenis: smallint("detail_jenis"),
   urlFile: text("urlFile"),
   nilaiHasil: integer("nilai_hasil").default(0),
 });

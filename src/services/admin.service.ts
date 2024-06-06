@@ -26,7 +26,7 @@ export class AdminService {
         data: students,
       };
     } catch (error: any) {
-      throw new Error(error.message);
+      throw error;
     }
   }
 
@@ -41,7 +41,7 @@ export class AdminService {
         message: "Beasiswa nilai updated successfully",
       };
     } catch (error: any) {
-      throw new Error(error.message);
+      throw error;
     }
   }
 }

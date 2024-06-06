@@ -18,7 +18,7 @@ export class UserService {
         data: profile,
       };
     } catch (error: any) {
-      throw new Error(error.message);
+      throw error;
     }
   }
   async getNilaiRaport(userNim: string) {
@@ -30,32 +30,43 @@ export class UserService {
       const subjectAverages: { [key: string]: number } = {};
       const subjectCounts: { [key: string]: number } = {};
 
-      // Iterate through the fetched data
+      nilai.forEach((item: any) => {
+        if (!subjectAverages[item.mapel]) {
+          subjectAverages[item.mapel] = 0;
+          subjectCounts[item.mapel] = 0;
+        }
+      });
+
       nilai.forEach((item: any) => {
         const { mapel, semester1, semester2, semester3, semester4 } = item;
         const scores = [semester1, semester2, semester3, semester4].map(Number);
-
         const validScores = scores.filter((score) => score !== 0);
 
         if (validScores.length > 0) {
           const total = validScores.reduce((sum, score) => sum + score, 0);
-          const average = total / validScores.length;
-
-          if (!subjectAverages[mapel]) {
-            subjectAverages[mapel] = 0;
-            subjectCounts[mapel] = 0;
-          }
           subjectAverages[mapel] += total;
           subjectCounts[mapel] += validScores.length;
         }
       });
-      const finalAverages = Object.keys(subjectAverages).map((mapel) => ({
-        mapel,
-        average: subjectAverages[mapel] / subjectCounts[mapel],
-      }));
 
-      console.log(nilai);
-      console.log(finalAverages);
+      const subjectAbbreviations: { [key: string]: string } = {
+        "Pendidikan Agama dan Budi Pekerti": "PAI",
+        "Pendidikan Pancasila dan Kewarganegaraan": "PKN",
+        "Ilmu Pengetahuan Alam": "IPA",
+        "Ilmu Pengetahuan Sosial": "IPS",
+      };
+
+      const finalAverages = Object.keys(subjectAverages).map((mapel) => {
+        const average =
+          subjectCounts[mapel] > 0
+            ? subjectAverages[mapel] / subjectCounts[mapel]
+            : 0;
+        const abbreviation = subjectAbbreviations[mapel] || mapel;
+        return {
+          mapel: abbreviation,
+          average,
+        };
+      });
 
       return {
         status: 200,
@@ -66,7 +77,7 @@ export class UserService {
         },
       };
     } catch (error: any) {
-      throw new Error(error.message);
+      throw error;
     }
   }
 }

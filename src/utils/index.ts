@@ -4,6 +4,17 @@ import { eq } from "drizzle-orm";
 import { sign } from "hono/jwt";
 import { Table } from "drizzle-orm";
 
+function throw_err(msg: string, code: number) {
+  const err = new Error(msg);
+  const errData = {
+    message: err.message,
+    statusCode: code,
+  };
+  throw errData;
+}
+
+export default throw_err;
+
 export async function authenticateUser(
   password: string,
   expectedPassword: string
@@ -33,7 +44,7 @@ export async function findUniqueUsers(username: string, namaTable: any) {
     });
     return user ? user : null;
   } catch (error: any) {
-    return error;
+    throw error;
   }
 }
 
@@ -46,7 +57,7 @@ export async function findUniqueMahasiswa(nim: string, namaTable: any) {
     });
     return mahasiswa ? mahasiswa : null;
   } catch (error: any) {
-    return error;
+    throw error;
   }
 }
 
@@ -71,6 +82,6 @@ export async function insertData(namaTable: any, data: object) {
   try {
     return await db.insert(namaTable).values(data);
   } catch (error: any) {
-    return error;
+    throw error;
   }
 }
