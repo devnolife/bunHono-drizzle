@@ -1,8 +1,72 @@
 import { db } from "db";
-import { mhs, users } from "schema";
+import { mhs, users, fileUpload } from "schema";
 import { eq } from "drizzle-orm";
 import { sign } from "hono/jwt";
 import { Table } from "drizzle-orm";
+
+import path from "path";
+import { createWriteStream } from "fs";
+import { fileTypeFromBuffer } from "file-type";
+import { Context } from "hono";
+
+export async function uploadFile(c: Context, fileName: string, nim: string) {
+  try {
+    const body = await c.req.parseBody();
+    const file = body["file"] as File;
+
+    if (!file) {
+      throw new Error("File not found");
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const fileType = await fileTypeFromBuffer(buffer);
+
+    if (!fileType) {
+      throw new Error("File type not supported");
+    }
+
+    const ext = fileType.ext;
+    const filePath = path.join(
+      __dirname,
+      "..",
+      "uploads",
+      `${fileName}.${ext}`
+    );
+
+    const writeStream = createWriteStream(filePath);
+    writeStream.write(buffer);
+    writeStream.end();
+
+    writeStream.on("finish", async () => {
+      const data = await db
+        .insert(fileUpload)
+        .values({ nim: nim, fileName: `${fileName}.${ext}` })
+        .onConflictDoUpdate({
+          target: fileUpload.nim,
+          set: {
+            fileName: `${fileName}.${ext}`,
+          },
+        })
+        .returning();
+      return {
+        message: "File uploaded successfully",
+        status: 200,
+        data: data,
+      };
+    });
+
+    writeStream.on("error", (err) => {
+      return {
+        message: "Error uploading file",
+        status: 500,
+        data: err,
+      };
+    });
+  } catch (err) {
+    throw err;
+  }
+}
 
 function throw_err(msg: string, code: number) {
   const err = new Error(msg);

@@ -67,7 +67,7 @@ export const nilaiRaport = pgTable(
 
 export const fileUpload = pgTable("file_upload", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
-  nim: varchar("nim", { length: 15 }).notNull(),
+  nim: varchar("nim", { length: 15 }).notNull().unique(),
   fileName: text("url"),
 });
 
