@@ -4,10 +4,11 @@ import { eq } from "drizzle-orm";
 import { sign } from "hono/jwt";
 import { Table } from "drizzle-orm";
 
-import path from "path";
+import { join } from "path";
 import { createWriteStream } from "fs";
 import { fileTypeFromBuffer } from "file-type";
 import { Context } from "hono";
+import { HTTPException } from "hono/http-exception";
 
 export async function uploadFile(c: Context, fileName: string, nim: string) {
   try {
@@ -15,7 +16,10 @@ export async function uploadFile(c: Context, fileName: string, nim: string) {
     const file = body["file"] as File;
 
     if (!file) {
-      throw new Error("File not found");
+      return {
+        message: "File not found",
+        status: 400,
+      };
     }
 
     const arrayBuffer = await file.arrayBuffer();
@@ -23,48 +27,45 @@ export async function uploadFile(c: Context, fileName: string, nim: string) {
     const fileType = await fileTypeFromBuffer(buffer);
 
     if (!fileType) {
-      throw new Error("File type not supported");
+      return {
+        message: "File type not supported",
+        status: 400,
+      };
     }
 
     const ext = fileType.ext;
-    const filePath = path.join(
-      __dirname,
-      "..",
-      "uploads",
-      `${fileName}.${ext}`
-    );
-
+    const filePath = join(__dirname, "..", "uploads", `${fileName}.${ext}`);
     const writeStream = createWriteStream(filePath);
-    writeStream.write(buffer);
-    writeStream.end();
 
-    writeStream.on("finish", async () => {
-      const data = await db
-        .insert(fileUpload)
-        .values({ nim: nim, fileName: `${fileName}.${ext}` })
-        .onConflictDoUpdate({
-          target: fileUpload.nim,
-          set: {
-            fileName: `${fileName}.${ext}`,
-          },
-        })
-        .returning();
-      return {
-        message: "File uploaded successfully",
-        status: 200,
-        data: data,
-      };
+    await new Promise((resolve, reject) => {
+      writeStream.write(buffer);
+      writeStream.end();
+      writeStream.on("finish", resolve);
+      writeStream.on("error", reject);
     });
 
-    writeStream.on("error", (err) => {
-      return {
-        message: "Error uploading file",
-        status: 500,
-        data: err,
-      };
-    });
+    const data = await db
+      .insert(fileUpload)
+      .values({ nim: nim, fileName: `${fileName}.${ext}` })
+      .onConflictDoUpdate({
+        target: fileUpload.nim,
+        set: {
+          fileName: `${fileName}.${ext}`,
+        },
+      })
+      .returning();
+
+    return {
+      message: "File uploaded successfully",
+      status: 200,
+      data: data,
+    };
   } catch (err) {
-    throw err;
+    return {
+      message: "Error uploading file",
+      status: 500,
+      data: err.message,
+    };
   }
 }
 
@@ -85,10 +86,9 @@ export async function authenticateUser(
 ) {
   const hash = await passwordCheck(password, expectedPassword);
   if (!hash) {
-    return {
-      status: 401,
-      message: "Password not match",
-    };
+    throw new HTTPException(400, {
+      message: "Password salah !",
+    });
   }
 }
 

@@ -8,6 +8,7 @@ import {
   smallint,
   integer,
   unique,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 export const users = pgTable("users", {
@@ -15,6 +16,7 @@ export const users = pgTable("users", {
   username: varchar("username", { length: 20 }).notNull(),
   password: varchar("password", { length: 150 }).notNull(),
   role: varchar("role", { length: 10 }).notNull(),
+  isRegistered: boolean("is_registered").default(false),
   created_at: timestamp("created_at", { mode: "string" }).defaultNow(),
   updated_at: timestamp("updated_at", { mode: "string" }).defaultNow(),
 });
@@ -55,11 +57,11 @@ export const nilaiRaport = pgTable(
     id: uuid("id").defaultRandom().primaryKey().notNull(),
     mapel: varchar("mapel", { length: 50 }).notNull(),
     nim: varchar("nim", { length: 15 }).notNull(),
-    semester1: varchar("semester1", { length: 10 }),
-    semester2: varchar("semester2", { length: 10 }),
-    semester3: varchar("semester3", { length: 10 }),
-    semester4: varchar("semester4", { length: 10 }),
-    semester5: varchar("semester5", { length: 10 }),
+    semester1: varchar("semester1", { length: 10 }).default("0"),
+    semester2: varchar("semester2", { length: 10 }).default("0"),
+    semester3: varchar("semester3", { length: 10 }).default("0"),
+    semester4: varchar("semester4", { length: 10 }).default("0"),
+    semester5: varchar("semester5", { length: 10 }).default("0"),
   },
   (t) => ({
     unq: unique("raport_unq").on(t.nim, t.mapel),

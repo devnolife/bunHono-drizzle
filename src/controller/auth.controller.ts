@@ -1,4 +1,6 @@
 import { checkUsers, getProfile, getNilaiRaport } from "api";
+import { db } from "db";
+import { and, eq } from "drizzle-orm";
 import { mhs, users, nilaiRaport as nilaiRaportTable } from "schema";
 import { findUniqueUsers, singJwt, authenticateUser, insertData } from "utils";
 export class Auth {
@@ -18,91 +20,111 @@ export class Auth {
       throw error;
     }
   }
+
   async login(username: string, password: string) {
     try {
-      let user: {
-          password: string;
-          id: string;
-          username: any;
-          passwd: string;
-          nim: string;
-        },
-        token,
-        authResult;
       if (username === "admin") {
-        user = await findUniqueUsers(username, users);
-        if (!user) {
-          return {
-            status: 404,
-            message: "User not found",
-          };
-        }
-        authResult = await authenticateUser(password, user.password);
-        if (authResult) return authResult;
-
-        token = await singJwt(user.id);
-        return {
-          status: 200,
-          message: "Success",
-          data: {
-            id: user.id,
-            username: user.username,
-            role: "admin",
-            token,
-          },
-        };
+        return await handleAdminLogin(username, password);
       } else {
-        user = await checkUsers(username);
-        authResult = await authenticateUser(password, user.passwd);
-        if (authResult) return authResult;
-        const profile = await getProfile(user.nim);
-        insertData(mhs, {
-          nim: user.nim,
-          nama: profile.nama,
-          prodi: profile.prodi?.namaProdi,
-          tempatLahir: profile.tempatLahir,
-          tanggalLahir: new Date(profile.tanggalLahir),
-          jenisKelamin: profile.jenisKelamin,
-          hp: profile.hp,
-          kodeProdi: profile.kodeProdi,
-          email: profile.email,
-        });
-        const nilaiRaport = await getNilaiRaport(user.nim);
-        nilaiRaport.forEach(
-          (nilai: {
-            mapel: any;
-            semester1: any;
-            semester2: any;
-            semester3: any;
-            semester4: any;
-            semester5: any;
-          }) => {
-            insertData(nilaiRaportTable, {
-              mapel: nilai.mapel,
-              nim: user.nim,
-              semester1: nilai.semester1,
-              semester2: nilai.semester2,
-              semester3: nilai.semester3,
-              semester4: nilai.semester4,
-              semester5: nilai.semester5,
-            });
-          }
-        );
-        token = await singJwt(user.nim);
-        return {
-          status: 200,
-          message: "Success",
-          data: {
-            id: user.nim,
-            username: user.nim,
-            nama: profile.nama,
-            role: "users",
-            token,
-          },
-        };
+        return await handleUserLogin(username, password);
       }
     } catch (error: any) {
       throw error;
     }
+  }
+}
+async function handleAdminLogin(username: string, password: string) {
+  const user = await findUniqueUsers(username, users);
+  if (!user) {
+    return {
+      status: 404,
+      message: "User not found",
+    };
+  }
+
+  await authenticateUser(password, user.password);
+  const token = await singJwt(user.id);
+  return {
+    status: 200,
+    message: "Success",
+    data: {
+      id: user.id,
+      username: user.username,
+      role: "admin",
+      token,
+    },
+  };
+}
+
+async function handleUserLogin(username: string, password: string) {
+  const user = await checkUsers(username);
+  await authenticateUser(password, user.passwd);
+  const profile = await getProfile(user.nim);
+  checkAndInsertUserProfile(user.nim, profile);
+  checkAndInsertUserGrades(user.nim);
+  const token = await singJwt(user.nim);
+  return {
+    status: 200,
+    message: "Success",
+    data: {
+      id: user.nim,
+      username: user.nim,
+      nama: profile.nama,
+      role: "users",
+      token,
+    },
+  };
+}
+
+async function checkAndInsertUserProfile(nim: string, profile: any) {
+  try {
+    const criteria = eq(mhs.nim, nim);
+    const existingProfile = await checkDataExists(mhs, criteria);
+    if (!existingProfile) {
+      await insertData(mhs, {
+        nim: nim,
+        nama: profile.nama,
+        prodi: profile.prodi?.namaProdi,
+        tempatLahir: profile.tempatLahir,
+        tanggalLahir: new Date(profile.tanggalLahir),
+        jenisKelamin: profile.jenisKelamin,
+        hp: profile.hp,
+        kodeProdi: profile.kodeProdi,
+        email: profile.email,
+      });
+    }
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+async function checkAndInsertUserGrades(nim: string) {
+  const nilaiRaport = await getNilaiRaport(nim);
+  for (const nilai of nilaiRaport) {
+    const criteria = and(
+      eq(nilaiRaportTable.nim, nim),
+      eq(nilaiRaportTable.mapel, nilai.mapel)
+    );
+    const existingGrade = await checkDataExists(nilaiRaportTable, criteria);
+    if (!existingGrade) {
+      await insertData(nilaiRaportTable, {
+        mapel: nilai.mapel,
+        nim: nim,
+        semester1: nilai.semester1,
+        semester2: nilai.semester2,
+        semester3: nilai.semester3,
+        semester4: nilai.semester4,
+        semester5: nilai.semester5,
+      });
+    }
+  }
+}
+
+async function checkDataExists(table: any, criteria: any) {
+  try {
+    const result = await db.select().from(table).where(criteria).limit(1);
+    return result.length > 0;
+  } catch (error) {
+    throw error;
   }
 }

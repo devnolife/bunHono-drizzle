@@ -21,12 +21,20 @@ routes.get("/user/profile", middleware.isAuth, async (c) => {
   return c.json(await user.profile(c));
 });
 
-routes.get("user/nilai-raport", middleware.isAuth, async (c) => {
+routes.post("/user/nilai-raport", middleware.isAuth, async (c) => {
+  return c.json(await user.addRaport(c));
+});
+
+routes.get("/user/nilai-raport", middleware.isAuth, async (c) => {
   return c.json(await user.nilaiRaport(c));
 });
 
-routes.post("/user/update-nilai-raport", middleware.isAuth, async (c) => {
+routes.put("/user/nilai-raport", middleware.isAuth, async (c) => {
   return c.json(await user.editRaport(c));
+});
+
+routes.delete("/user/nilai-raport/:idRaport", middleware.isAuth, async (c) => {
+  return c.json(await user.deleteRaport(c));
 });
 
 routes.post("/user/beasiswa/register", middleware.isAuth, async (c) => {
