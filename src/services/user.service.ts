@@ -38,8 +38,15 @@ export class UserService {
       });
 
       nilai.forEach((item: any) => {
-        const { mapel, semester1, semester2, semester3, semester4 } = item;
-        const scores = [semester1, semester2, semester3, semester4].map(Number);
+        const { mapel, semester1, semester2, semester3, semester4, semester5 } =
+          item;
+        const scores = [
+          semester1,
+          semester2,
+          semester3,
+          semester4,
+          semester5,
+        ].map(Number);
         const validScores = scores.filter((score) => score !== 0);
 
         if (validScores.length > 0) {

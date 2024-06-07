@@ -59,6 +59,7 @@ export const nilaiRaport = pgTable(
     semester2: varchar("semester2", { length: 10 }),
     semester3: varchar("semester3", { length: 10 }),
     semester4: varchar("semester4", { length: 10 }),
+    semester5: varchar("semester5", { length: 10 }),
   },
   (t) => ({
     unq: unique("raport_unq").on(t.nim, t.mapel),

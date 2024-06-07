@@ -59,7 +59,9 @@ export async function getNilaiRaport(username: string) {
           semester1
           semester2
           semester3
-          semester4 }}`,
+          semester4 
+          semester5
+          }}`,
         variables: {},
       }),
       headers: { "Content-Type": "application/json" },

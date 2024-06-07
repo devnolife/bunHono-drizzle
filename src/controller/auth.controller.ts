@@ -75,6 +75,7 @@ export class Auth {
             semester2: any;
             semester3: any;
             semester4: any;
+            semester5: any;
           }) => {
             insertData(nilaiRaportTable, {
               mapel: nilai.mapel,
@@ -83,6 +84,7 @@ export class Auth {
               semester2: nilai.semester2,
               semester3: nilai.semester3,
               semester4: nilai.semester4,
+              semester5: nilai.semester5,
             });
           }
         );
