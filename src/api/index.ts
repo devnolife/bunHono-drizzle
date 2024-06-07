@@ -1,4 +1,5 @@
-const url = "https://sicekcok.if.unismuh.ac.id/graphql";
+const url2 = "https://sicekcok.if.unismuh.ac.id/graphql";
+const url = "http://10.10.2.54:3144/graphql";
 import { HTTPException } from "hono/http-exception";
 export async function checkUsers(username: string) {
   try {
