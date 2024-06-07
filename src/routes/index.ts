@@ -33,7 +33,7 @@ routes.post("/user/beasiswa/register", middleware.isAuth, async (c) => {
   return c.json(await beasiswa.register(c));
 });
 routes.post("/user/beasiswa/upload", middleware.isAuth, async (c) => {
-  return c.json(await beasiswa.upload(c));
+  return c.json(await user.uploadFile(c));
 });
 
 routes.get("/admin/mahasiswa", middleware.isAuth, async (c) => {

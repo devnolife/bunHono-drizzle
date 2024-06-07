@@ -21,5 +21,12 @@ export class UserControllers {
     return this.userService.updateNilaiRaport(idRaport, data);
   }
 
-  async 
+  async uploadFile(c: any) {
+    const body = await c.req.parseBody();
+    console.log("🚀 ~ UserControllers ~ uploadFile ~ body:", body);
+    console.log(body["file"]);
+    return {
+      message: "File uploaded successfully",
+    };
+  }
 }
