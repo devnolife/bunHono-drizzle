@@ -10,16 +10,18 @@ import { fileTypeFromBuffer } from "file-type";
 import { Context } from "hono";
 import { HTTPException } from "hono/http-exception";
 
-export async function uploadFile(c: Context, fileName: string, nim: string) {
+export async function uploadFile(c: Context) {
   try {
     const body = await c.req.parseBody();
     const file = body["file"] as File;
+    const jenis_beasiswa = body["jenis_beasiswa"] as string;
+    const { userId } = c.get("jwtPayload");
+    const fileName = `${jenis_beasiswa}-${userId}-${Date.now()}`;
 
     if (!file) {
-      return {
+      throw new HTTPException(400, {
         message: "File not found",
-        status: 400,
-      };
+      });
     }
 
     const arrayBuffer = await file.arrayBuffer();
@@ -46,7 +48,7 @@ export async function uploadFile(c: Context, fileName: string, nim: string) {
 
     const data = await db
       .insert(fileUpload)
-      .values({ nim: nim, fileName: `${fileName}.${ext}` })
+      .values({ nim: userId, fileName: `${fileName}.${ext}` })
       .onConflictDoUpdate({
         target: fileUpload.nim,
         set: {
@@ -64,7 +66,7 @@ export async function uploadFile(c: Context, fileName: string, nim: string) {
     return {
       message: "Error uploading file",
       status: 500,
-      data: err.message,
+      data: err,
     };
   }
 }

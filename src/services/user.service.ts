@@ -2,7 +2,7 @@
 import { db } from "db";
 import { and, eq } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
-import { mhs, nilaiRaport } from "schema";
+import { mhs, nilaiRaport, users } from "schema";
 
 export class UserService {
   async getUserProfile(userId: string) {
@@ -22,6 +22,20 @@ export class UserService {
       throw error;
     }
   }
+
+  async updateRegister(userId: string) {
+    try {
+      await db
+        .update(users)
+        .set({
+          isRegistered: true,
+        })
+        .where(eq(users.id, userId));
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
   async getNilaiRaport(userNim: string) {
     try {
       const nilai = await db.query.nilaiRaport.findMany({

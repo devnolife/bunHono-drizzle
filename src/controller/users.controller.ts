@@ -12,6 +12,11 @@ export class UserControllers {
     const { userId } = c.get("jwtPayload");
     return this.userService.getUserProfile(userId);
   }
+
+  async updateKonformasi(c: Context) {
+    const { userId } = c.get("jwtPayload");
+    return this.userService.updateRegister(userId);
+  }
   async nilaiRaport(c: Context) {
     const { userId } = c.get("jwtPayload");
     return this.userService.getNilaiRaport(userId);
@@ -31,9 +36,7 @@ export class UserControllers {
     return this.userService.deteleNilaiRaport(idRaport);
   }
   async uploadFile(c: Context) {
-    const { userId } = c.get("jwtPayload");
-    const fileName = `raport-${userId}-${Date.now()}`;
-    const data = await uploadFile(c, fileName, userId);
+    const data = await uploadFile(c);
     return c.json({
       message: "File uploaded successfully",
       status: 200,

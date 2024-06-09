@@ -41,7 +41,6 @@ export const beasiswa = pgTable("beasiswa", {
   nim: varchar("nim", { length: 15 }).unique().notNull(),
   jenisBeasiswaId: smallint("jenis_biasiswa_id").notNull(),
   detailJenis: smallint("detail_jenis"),
-  urlFile: text("urlFile"),
   nilaiHasil: integer("nilai_hasil").default(0),
 });
 
@@ -97,5 +96,11 @@ export const mahasiswaRelations = relations(mhs, ({ one }) => ({
   beasiswa: one(beasiswa, {
     fields: [mhs.nim],
     references: [beasiswa.nim],
+  }),
+}));
+export const fileUploadRelations = relations(beasiswa, ({ one }) => ({
+  fileopload: one(fileUpload, {
+    fields: [beasiswa.nim],
+    references: [fileUpload.nim],
   }),
 }));

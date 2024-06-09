@@ -4,8 +4,7 @@ export class BeasiswaService {
   async registerBeasiswa(
     nim: string,
     jenisBeasiswaId: number,
-    detailJenis: number,
-    urlFile: string
+    detailJenis: number
   ) {
     try {
       const registrasi = await db
@@ -14,7 +13,13 @@ export class BeasiswaService {
           nim,
           jenisBeasiswaId,
           detailJenis,
-          urlFile,
+        })
+        .onConflictDoUpdate({
+          target: beasiswa.nim,
+          set: {
+            jenisBeasiswaId,
+            detailJenis,
+          },
         })
         .returning();
       return {
