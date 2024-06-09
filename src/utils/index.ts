@@ -14,6 +14,7 @@ export async function uploadFile(c: Context) {
   try {
     const body = await c.req.parseBody();
     const file = body["file"] as File;
+    console.log("🚀 ~ uploadFile ~ file:", file);
     const jenis_beasiswa = body["jenis_beasiswa"] as string;
     const { userId } = c.get("jwtPayload");
     const fileName = `${jenis_beasiswa}-${userId}-${Date.now()}`;
@@ -29,10 +30,9 @@ export async function uploadFile(c: Context) {
     const fileType = await fileTypeFromBuffer(buffer);
 
     if (!fileType) {
-      return {
+      throw new HTTPException(400, {
         message: "File type not supported",
-        status: 400,
-      };
+      });
     }
 
     const ext = fileType.ext;
@@ -63,11 +63,8 @@ export async function uploadFile(c: Context) {
       data: data,
     };
   } catch (err) {
-    return {
-      message: "Error uploading file",
-      status: 500,
-      data: err,
-    };
+    console.log("🚀 ~ uploadFile ~ err:", err);
+    throw err;
   }
 }
 

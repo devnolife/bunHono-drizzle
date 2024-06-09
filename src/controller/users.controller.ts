@@ -36,11 +36,6 @@ export class UserControllers {
     return this.userService.deteleNilaiRaport(idRaport);
   }
   async uploadFile(c: Context) {
-    const data = await uploadFile(c);
-    return c.json({
-      message: "File uploaded successfully",
-      status: 200,
-      data: data,
-    });
+    return uploadFile(c);
   }
 }
