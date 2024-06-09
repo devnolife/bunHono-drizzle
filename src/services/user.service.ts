@@ -2,7 +2,7 @@
 import { db } from "db";
 import { and, eq } from "drizzle-orm";
 import { HTTPException } from "hono/http-exception";
-import { mhs, nilaiRaport, users } from "schema";
+import { mhs, nilaiRaport } from "schema";
 
 export class UserService {
   async getUserProfile(userId: string) {
@@ -10,7 +10,11 @@ export class UserService {
       const profile = await db.query.mhs.findFirst({
         where: eq(mhs.nim, userId),
         with: {
-          beasiswa: true,
+          beasiswa: {
+            with: {
+              fileUpload: true,
+            },
+          },
         },
       });
       return {
@@ -26,11 +30,16 @@ export class UserService {
   async updateRegister(userId: string) {
     try {
       await db
-        .update(users)
+        .update(mhs)
         .set({
           isRegistered: true,
         })
-        .where(eq(users.id, userId));
+        .where(eq(mhs.nim, userId));
+      return {
+        status: 200,
+        message: "Sukses mengkonfirmasi pendaftaran",
+        data: null,
+      };
     } catch (error: any) {
       throw error;
     }

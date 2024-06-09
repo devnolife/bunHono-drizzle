@@ -16,7 +16,6 @@ export const users = pgTable("users", {
   username: varchar("username", { length: 20 }).notNull(),
   password: varchar("password", { length: 150 }).notNull(),
   role: varchar("role", { length: 10 }).notNull(),
-  isRegistered: boolean("is_registered").default(false),
   created_at: timestamp("created_at", { mode: "string" }).defaultNow(),
   updated_at: timestamp("updated_at", { mode: "string" }).defaultNow(),
 });
@@ -33,6 +32,7 @@ export const mhs = pgTable("mahasiswa", {
   tanggalLahir: date("tanggalLahir", { mode: "string" }),
   jenisKelamin: varchar("jenisKelamin", { length: 10 }),
   hp: varchar("hp", { length: 15 }),
+  isRegistered: boolean("is_registered").default(false),
   kodeProdi: varchar("kodeProdi", { length: 10 }),
 });
 
@@ -83,6 +83,10 @@ export const beasiswaRelations = relations(beasiswa, ({ one, many }) => ({
     references: [mhs.nim],
   }),
   nilaiRaport: many(nilaiRaport),
+  fileUpload: one(fileUpload, {
+    fields: [beasiswa.nim],
+    references: [fileUpload.nim],
+  }),
 }));
 
 export const nilaiRaportRelations = relations(nilaiRaport, ({ one }) => ({

@@ -14,7 +14,6 @@ export async function uploadFile(c: Context) {
   try {
     const body = await c.req.parseBody();
     const file = body["file"] as File;
-    console.log("🚀 ~ uploadFile ~ file:", file);
     const jenis_beasiswa = body["jenis_beasiswa"] as string;
     const { userId } = c.get("jwtPayload");
     const fileName = `${jenis_beasiswa}-${userId}-${Date.now()}`;

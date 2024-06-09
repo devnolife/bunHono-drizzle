@@ -38,4 +38,9 @@ export class UserControllers {
   async uploadFile(c: Context) {
     return uploadFile(c);
   }
+
+  async updateRegister(c: Context) {
+    const { userId } = c.get("jwtPayload");
+    return this.userService.updateRegister(userId);
+  }
 }

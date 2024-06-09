@@ -162,6 +162,13 @@
       "when": 1717840751666,
       "tag": "0022_clear_professor_monster",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "6",
+      "when": 1717940926290,
+      "tag": "0023_opposite_toad",
+      "breakpoints": true
     }
   ]
 }

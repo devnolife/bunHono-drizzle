@@ -17,8 +17,13 @@ routes.post("/login", async (c) => {
   return c.json(await auth.login(username, password));
 });
 
+routes.get("/user/check-register", middleware.isAuth, async (c) => {
+  const { userId } = c.get("jwtPayload");
+  return c.json(await auth.checkRegister(userId));
+});
 routes.get("/user/profile", middleware.isAuth, async (c) => {
-  return c.json(await user.profile(c));
+  const profile = await user.profile(c);
+  return c.json(profile);
 });
 
 routes.post("/user/nilai-raport", middleware.isAuth, async (c) => {
@@ -42,6 +47,9 @@ routes.post("/user/beasiswa/register", middleware.isAuth, async (c) => {
 });
 routes.post("/user/beasiswa/upload", middleware.isAuth, async (c) => {
   return c.json(await user.uploadFile(c));
+});
+routes.put("/users/update-register", middleware.isAuth, async (c) => {
+  return c.json(await user.updateRegister(c));
 });
 
 routes.get("/admin/mahasiswa", middleware.isAuth, async (c) => {

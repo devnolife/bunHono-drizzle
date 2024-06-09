@@ -32,7 +32,25 @@ export class Auth {
       throw error;
     }
   }
+async checkRegister(userId: string) {
+  try {
+    const data = await db.query.mhs.findFirst({
+      where: eq(mhs.nim, userId),
+    })
+    return{
+      status: 200,
+      message: "Success",
+      data: {
+        isRegistered: data?.isRegistered,
+      },
+    }
+  } catch (error: any) {
+    throw error;
+  }
+
 }
+}
+
 async function handleAdminLogin(username: string, password: string) {
   const user = await findUniqueUsers(username, users);
   if (!user) {
@@ -63,6 +81,7 @@ async function handleUserLogin(username: string, password: string) {
   checkAndInsertUserProfile(user.nim, profile);
   checkAndInsertUserGrades(user.nim);
   const token = await singJwt(user.nim);
+
   return {
     status: 200,
     message: "Success",
@@ -75,6 +94,8 @@ async function handleUserLogin(username: string, password: string) {
     },
   };
 }
+
+
 
 async function checkAndInsertUserProfile(nim: string, profile: any) {
   try {
