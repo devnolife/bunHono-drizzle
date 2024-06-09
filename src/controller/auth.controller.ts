@@ -1,6 +1,6 @@
 import { checkUsers, getProfile, getNilaiRaport } from "api";
 import { db } from "db";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { mhs, users, nilaiRaport as nilaiRaportTable } from "schema";
 import { findUniqueUsers, singJwt, authenticateUser, insertData } from "utils";
 export class Auth {
@@ -32,23 +32,22 @@ export class Auth {
       throw error;
     }
   }
-async checkRegister(userId: string) {
-  try {
-    const data = await db.query.mhs.findFirst({
-      where: eq(mhs.nim, userId),
-    })
-    return{
-      status: 200,
-      message: "Success",
-      data: {
-        isRegistered: data?.isRegistered,
-      },
+  async checkRegister(userId: string) {
+    try {
+      const data = await db.query.mhs.findFirst({
+        where: eq(mhs.nim, userId),
+      });
+      return {
+        status: 200,
+        message: "Success",
+        data: {
+          isRegistered: data?.isRegistered,
+        },
+      };
+    } catch (error: any) {
+      throw error;
     }
-  } catch (error: any) {
-    throw error;
   }
-
-}
 }
 
 async function handleAdminLogin(username: string, password: string) {
@@ -95,8 +94,6 @@ async function handleUserLogin(username: string, password: string) {
   };
 }
 
-
-
 async function checkAndInsertUserProfile(nim: string, profile: any) {
   try {
     const criteria = eq(mhs.nim, nim);
@@ -121,23 +118,18 @@ async function checkAndInsertUserProfile(nim: string, profile: any) {
 
 async function checkAndInsertUserGrades(nim: string) {
   const nilaiRaport = await getNilaiRaport(nim);
-  for (const nilai of nilaiRaport) {
-    const criteria = and(
-      eq(nilaiRaportTable.nim, nim),
-      eq(nilaiRaportTable.mapel, nilai.mapel)
-    );
-    const existingGrade = await checkDataExists(nilaiRaportTable, criteria);
-    if (!existingGrade) {
-      await insertData(nilaiRaportTable, {
-        mapel: nilai.mapel,
-        nim: nim,
-        semester1: nilai.semester1,
-        semester2: nilai.semester2,
-        semester3: nilai.semester3,
-        semester4: nilai.semester4,
-        semester5: nilai.semester5,
-      });
-    }
+  const criteria = eq(nilaiRaportTable.nim, nim);
+  const existingGrade = await checkDataExists(nilaiRaportTable, criteria);
+  if (!existingGrade) {
+    await insertData(nilaiRaport, {
+      mapel: nilaiRaport.mapel,
+      nim: nim,
+      semester1: nilaiRaport.semester1,
+      semester2: nilaiRaport.semester2,
+      semester3: nilaiRaport.semester3,
+      semester4: nilaiRaport.semester4,
+      semester5: nilaiRaport.semester5,
+    });
   }
 }
 
