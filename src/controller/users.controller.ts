@@ -19,6 +19,7 @@ export class UserControllers {
   }
   async nilaiRaport(c: Context) {
     const { userId } = c.get("jwtPayload");
+    console.log("🚀 ~ UserControllers ~ nilaiRaport ~ userId:", userId)
     return this.userService.getNilaiRaport(userId);
   }
 

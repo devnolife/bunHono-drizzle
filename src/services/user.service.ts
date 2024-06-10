@@ -50,6 +50,7 @@ export class UserService {
       const nilai = await db.query.nilaiRaport.findMany({
         where: eq(nilaiRaport.nim, userNim),
       });
+      console.log("🚀 ~ UserService ~ getNilaiRaport ~ nilai:", nilai);
 
       const subjectAverages: { [key: string]: number } = {};
       const subjectCounts: { [key: string]: number } = {};
