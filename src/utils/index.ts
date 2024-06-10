@@ -62,7 +62,6 @@ export async function uploadFile(c: Context) {
       data: data,
     };
   } catch (err) {
-    console.log("🚀 ~ uploadFile ~ err:", err);
     throw err;
   }
 }
