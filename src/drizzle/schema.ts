@@ -25,7 +25,7 @@ export const mhs = pgTable("mahasiswa", {
   nim: varchar("nim", { length: 15 }).unique().notNull(),
   nama: varchar("nama", { length: 100 }),
   email: varchar("email", { length: 50 }),
-  prodi: varchar("prodi", { length: 20 }),
+  prodi: varchar("prodi", { length: 200 }),
   created_at: timestamp("created_at", { mode: "string" }),
   updated_at: timestamp("updated_at", { mode: "string" }),
   tempatLahir: varchar("tempatLahir", { length: 50 }),

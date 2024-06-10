@@ -46,6 +46,7 @@ export class UserService {
   }
 
   async getNilaiRaport(userNim: string) {
+    console.log("🚀 ~ UserService ~ getNilaiRaport ~ userNim:", userNim);
     try {
       const nilai = await db.query.nilaiRaport.findMany({
         where: eq(nilaiRaport.nim, userNim),
