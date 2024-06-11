@@ -33,6 +33,7 @@ export class Auth {
     }
   }
   async checkRegister(userId: string) {
+    console.log("🚀 ~ Auth ~ checkRegister ~ userId:", userId);
     try {
       const data = await db.query.mhs.findFirst({
         where: eq(mhs.nim, userId),
@@ -75,6 +76,7 @@ async function handleAdminLogin(username: string, password: string) {
 
 async function handleUserLogin(username: string, password: string) {
   const user = await checkUsers(username);
+  console.log("🚀 ~ handleUserLogin ~ user:", user);
   await authenticateUser(password, user.passwd);
   const profile = await getProfile(user.nim);
   checkAndInsertUserProfile(user.nim, profile);
