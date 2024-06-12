@@ -1,7 +1,7 @@
 import figlet from "figlet";
 import { client } from "db";
 import { app } from "./app";
-const port = 8000;
+const port = 8080;
 (async () => {
   try {
     client.connect();
