@@ -14,11 +14,8 @@ export async function uploadFile(c: Context) {
   try {
     const body = await c.req.parseBody();
     const file = body["file"] as File;
-    console.log("🚀 ~ uploadFile ~ file:", file);
     const jenis_beasiswa = body["jenis_beasiswa"] as string;
-    console.log("🚀 ~ uploadFile ~ jenis_beasiswa:", jenis_beasiswa);
     const { userId } = c.get("jwtPayload");
-    console.log("🚀 ~ uploadFile ~ userId:", userId);
     const fileName = `${jenis_beasiswa}-${userId}-${Date.now()}`;
 
     if (!file) {
@@ -65,7 +62,6 @@ export async function uploadFile(c: Context) {
       data: data,
     };
   } catch (err) {
-    console.log("🚀 ~ uploadFile ~ err:", err);
     throw err;
   }
 }
