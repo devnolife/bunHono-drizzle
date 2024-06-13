@@ -15,4 +15,8 @@ export class AdminControllers {
     const { beasiswaId, newNilai } = await c.req.json();
     return this.adminService.updateBeasiswaNilai(beasiswaId, newNilai);
   }
+  async getFile(c: any) {
+    const { fileName } = await c.req.param();
+    return this.adminService.getFileUpload(fileName);
+  }
 }

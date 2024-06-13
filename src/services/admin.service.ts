@@ -2,17 +2,25 @@
 import { db } from "db";
 import { beasiswa, fileUpload, nilaiRaport } from "schema";
 import { eq } from "drizzle-orm";
+import { join } from "path";
+import { readFile } from "fs/promises";
 
 export class AdminService {
-
-  async approveBeasiswa(beasiswaId: string) {
+  async getFileUpload(fileName: string) {
     try {
-      await db.update(beasiswa).set({ status: "approved" }).where(eq(beasiswa.id, beasiswaId));
-      return {
-        status: 200,
-        message: "Beasiswa approved successfully",
-      };
-    }catch (error: any) {
+      if (!fileName) {
+        throw new Error("File name must be provided");
+      }
+      const filePath = join(__dirname, "..", "uploads", fileName);
+      const fileContent = await readFile(filePath);
+      return new Response(fileContent, {
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `attachment; filename=${fileName}`,
+        },
+      });
+    } catch (error: any) {
+      console.error("Error fetching file:", error);
       throw error;
     }
   }

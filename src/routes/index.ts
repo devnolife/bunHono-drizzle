@@ -60,4 +60,8 @@ routes.put("/admin/beasiswa/nilai", async (c) => {
   return c.json(await admin.updateBeasiswaNilai(c));
 });
 
+routes.get("/admin/file/:fileName", async (c) => {
+  return await admin.getFile(c);
+});
+
 export default routes;
