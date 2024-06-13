@@ -52,11 +52,11 @@ routes.put("/users/update-register", middleware.isAuth, async (c) => {
   return c.json(await user.updateRegister(c));
 });
 
-routes.get("/admin/mahasiswa", middleware.isAuth, async (c) => {
+routes.get("/admin/mahasiswa", async (c) => {
   return c.json(await admin.getAllMahasiswa());
 });
 
-routes.put("/admin/beasiswa/nilai", middleware.isAuth, async (c) => {
+routes.put("/admin/beasiswa/nilai", async (c) => {
   return c.json(await admin.updateBeasiswaNilai(c));
 });
 

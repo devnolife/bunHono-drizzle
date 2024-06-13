@@ -1,9 +1,21 @@
 // services/admin.service.ts
 import { db } from "db";
-import { beasiswa } from "schema";
+import { beasiswa, fileUpload, nilaiRaport } from "schema";
 import { eq } from "drizzle-orm";
 
 export class AdminService {
+
+  async approveBeasiswa(beasiswaId: string) {
+    try {
+      await db.update(beasiswa).set({ status: "approved" }).where(eq(beasiswa.id, beasiswaId));
+      return {
+        status: 200,
+        message: "Beasiswa approved successfully",
+      };
+    }catch (error: any) {
+      throw error;
+    }
+  }
   async getAllMahasiswa() {
     try {
       const students = await db.query.mhs.findMany({
@@ -16,6 +28,8 @@ export class AdminService {
                 },
               },
               nilaiRaport: true,
+              mahasiswa: true,
+              fileUpload: true,
             },
           },
         },

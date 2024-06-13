@@ -42,6 +42,7 @@ export const beasiswa = pgTable("beasiswa", {
   jenisBeasiswaId: smallint("jenis_biasiswa_id").notNull(),
   detailJenis: smallint("detail_jenis"),
   nilaiHasil: integer("nilai_hasil").default(0),
+  approve: boolean("approve").default(false),
 });
 
 export const jenisBeasiswa = pgTable("jenis_beasiswa", {
