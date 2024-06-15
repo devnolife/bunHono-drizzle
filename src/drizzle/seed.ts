@@ -1,16 +1,17 @@
 import { db, client } from "db";
+import { users } from "schema";
 
 (async () => {
   try {
     client.connect();
-    const biayasiswa = await db.query.beasiswa.findMany({
-      with: {
-        jenisBeasiswa: true,
-        nilaiRaport: true,
-        mahasiswa: true,
-      },
+    await db.insert(users).values({
+      username: "admin",
+      password: new Bun.CryptoHasher("md5")
+        .update("samaKemarin00")
+        .digest("hex"),
+      role: "admin",
     });
-    console.log("Biayasiswa:", biayasiswa);
+    console.log("Seed data inserted");
     client.end();
   } catch (error: any) {
     console.error(error.message);

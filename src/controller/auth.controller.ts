@@ -51,14 +51,15 @@ export class Auth {
 }
 
 async function handleAdminLogin(username: string, password: string) {
-  const user = await findUniqueUsers(username, users);
+  const user = await db.query.users.findFirst({
+    where: eq(users.username, username),
+  });
   if (!user) {
     return {
       status: 404,
       message: "User not found",
     };
   }
-
   await authenticateUser(password, user.password);
   const token = await singJwt(user.id);
   return {
