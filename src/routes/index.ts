@@ -56,6 +56,10 @@ routes.get("/admin/mahasiswa", async (c) => {
   return c.json(await admin.getAllMahasiswa());
 });
 
+routes.get("/admin/dashboard", async (c) => {
+  return c.json(await admin.dataDashboard());
+});
+
 routes.put("/admin/beasiswa/nilai", async (c) => {
   return c.json(await admin.updateBeasiswaNilai(c));
 });
@@ -64,4 +68,19 @@ routes.get("/admin/file/:fileName", async (c) => {
   return await admin.getFile(c);
 });
 
+routes.get("/admin/dashboard", async (c) => {
+  return c.json(await admin.dataDashboard());
+});
+
+routes.get("/admin/rekap-mahasiswa", async (c) => {
+  return c.json(await admin.rekapMahasiswa());
+});
+
+routes.get("/admin/rekap-beasiswa", async (c) => {
+  return c.json(await admin.rekapBeasiswa());
+});
+
+routes.get("/admin/rekap-beasiswa-name", async (c) => {
+  return c.json(await admin.rekapByName());
+});
 export default routes;

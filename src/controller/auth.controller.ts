@@ -45,6 +45,7 @@ export class Auth {
         },
       };
     } catch (error: any) {
+      console.log("🚀 ~ Auth ~ checkRegister ~ error:", error)
       throw error;
     }
   }

@@ -19,4 +19,20 @@ export class AdminControllers {
     const { fileName } = await c.req.param();
     return this.adminService.getFileUpload(fileName);
   }
+
+  async dataDashboard() {
+    return this.adminService.dashboardAdmin();
+  }
+
+  async rekapMahasiswa() {
+    return this.adminService.rekapMahasiswa();
+  }
+
+  async rekapBeasiswa() {
+    return this.adminService.rekapBeasiswa();
+  }
+
+  async rekapByName() {
+    return this.adminService.rekapBeasiswaByName();
+  }
 }

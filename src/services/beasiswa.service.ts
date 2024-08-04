@@ -1,6 +1,9 @@
 import { db } from "db";
 import { beasiswa } from "schema";
+
 export class BeasiswaService {
+
+  
   async registerBeasiswa(
     nim: string,
     jenisBeasiswaId: number,

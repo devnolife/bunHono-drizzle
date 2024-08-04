@@ -42,6 +42,32 @@ export const beasiswa = pgTable("beasiswa", {
   jenisBeasiswaId: smallint("jenis_biasiswa_id").notNull(),
   detailJenis: smallint("detail_jenis"),
   nilaiHasil: integer("nilai_hasil").default(0),
+  nilaiDokument: integer("nilai_dokumen").default(0),
+});
+
+export const fakultas = pgTable("fakultas", {
+  id: integer("id").primaryKey().notNull(),
+  status: varchar("status", { length: 10 }).notNull(),
+  kodeFakultas: varchar("kode_fakultas", { length: 20 }).notNull(),
+  namaFakultas: varchar("nama_fakultas", { length: 50 }),
+  namaFakultasEng: varchar("nama_fakultas_eng", { length: 50 }),
+  namaAlias: varchar("nama_alias", { length: 20 }),
+  program: varchar("program", { length: 100 }),
+});
+
+export const prodi = pgTable("prodi", {
+  id: integer("id").primaryKey().notNull(),
+  status: varchar("status", { length: 50 }),
+  kodeFakultas: varchar("kode_fakultas", { length: 50 }),
+  kodeProdi: varchar("kode_prodi", { length: 50 }),
+  namaProdi: varchar("nama_prodi", { length: 255 }),
+  namaProdiEng: varchar("nama_prodi_eng", { length: 255 }),
+  pmbKuota: integer("pmb_kuota"),
+  sksLulus: integer("sks_lulus"),
+  statusProdi: varchar("status_prodi", { length: 50 }),
+  emailProdi: varchar("email_prodi", { length: 255 }),
+  nidnKetuaProdi: varchar("nidn_ketua_prodi", { length: 50 }),
+  totalSksLulus: integer("total_sks_lulus"),
 });
 
 export const jenisBeasiswa = pgTable("jenis_beasiswa", {
