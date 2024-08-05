@@ -9,6 +9,7 @@ import {
   integer,
   unique,
   boolean,
+  decimal,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 export const users = pgTable("users", {
@@ -41,7 +42,7 @@ export const beasiswa = pgTable("beasiswa", {
   nim: varchar("nim", { length: 15 }).unique().notNull(),
   jenisBeasiswaId: smallint("jenis_biasiswa_id").notNull(),
   detailJenis: smallint("detail_jenis"),
-  nilaiHasil: integer("nilai_hasil").default(0),
+  nilaiHasil: decimal("nilai_hasil"),
   nilaiDokument: integer("nilai_dokumen").default(0),
 });
 

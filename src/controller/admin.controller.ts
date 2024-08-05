@@ -11,10 +11,6 @@ export class AdminControllers {
   async getAllMahasiswa() {
     return this.adminService.getAllMahasiswa();
   }
-  async updateBeasiswaNilai(c: any) {
-    const { beasiswaId, newNilai } = await c.req.json();
-    return this.adminService.updateBeasiswaNilai(beasiswaId, newNilai);
-  }
   async getFile(c: any) {
     const { fileName } = await c.req.param();
     return this.adminService.getFileUpload(fileName);
@@ -34,5 +30,15 @@ export class AdminControllers {
 
   async rekapByName() {
     return this.adminService.rekapBeasiswaByName();
+  }
+
+  async updateNilai(c: any) {
+    const { nilaiRaport, nim } = await c.req.json();
+    return this.adminService.updateNilai(nim, nilaiRaport);
+  }
+
+  async updateNilaiDokument(c: any) {
+    const { nilaiDokument, nim } = await c.req.json();
+    return this.adminService.updateNilaiDokument(nim, nilaiDokument);
   }
 }
